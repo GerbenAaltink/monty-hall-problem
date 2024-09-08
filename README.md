@@ -3,7 +3,7 @@
 ![workflow](https://github.com/GerbenAaltink/monty-hall-problem/actions/workflows/c-cpp.yml/badge.svg)
 
 ## Description 
-This is my answer to the Monty Hall problem. As some people mentioned, I do let Monty choose before the prize is placed. Yes, that's incorrect but it shouldn't matter since Monty will always pick a door with a goat behind it. The prize will always be one that Monty didn't choose. Reason that I didn't change the sequence is because people are reviewing my code. It's not convenient/fair to change source in between.
+This is my answer to the Monty Hall problem. As some people mentioned, I do let Monty choose before the prize is placed. Yes, that's incorrect but it shouldn't matter since Monty will always pick a door with a goat behind it. The door with prize behind it will always be one that Monty didn't choose. Reason that I didn't change the sequence is because people are reviewing my code. It's not convenient/fair to change source in between.
 
 ## Makefile
 
