@@ -1,5 +1,7 @@
 # Monty Hall problem
 
+![workflow](https://github.com/GerbenAaltink/monty-hall-problem/actions/workflows/c-cpp.yml/badge.svg)
+
 ## Description 
 This is my answer to the Monty Hall problem. As some people mentioned, i do let monty choose before the prize is placed. Yes, that's correct but that shouldn't matter. Reason that i did not change the sequence is because people are reviewing my code. It's not fair to change source in between.
 
