@@ -13,8 +13,10 @@ typedef enum {
 MONTY_HALL_RESULT monty_hall() {
     int door_with_prize = rand() % 3;
     int door_choice = rand() % 3;
-
     int door_showman;
+
+    // Select door for showman that can't be the one with prize and not
+    // the previously chosen.
     while (true) {
         door_showman = rand() % 3;
         if (door_showman != door_choice && door_showman != door_with_prize)
@@ -44,6 +46,7 @@ int main() {
     int times_game = 100;
     int times_switch_positive = 0;
     int times_switch_negative = 0;
+    double switch_ratio;
     int results[5] = {0};
     for (int i = 0; i < times_game; i++) {
         int result = monty_hall();
@@ -55,9 +58,17 @@ int main() {
             times_switch_negative++;
         }
     }
+    switch_ratio = (double)(times_switch_positive) / (double)times_game * 100.0;
+    printf("Player won by switching: %.2f.\n",
+           (double)results[PLAYER_WON_BY_SWITHCHING] / times_game * 100.0);
+    printf("Player lost by switching: %.2f.\n",
+           (double)results[PLAYER_LOST_BY_SWITCHING] / times_game * 100.0);
+    printf("Player won by staying: %.2f.\n",
+           (double)results[PLAYER_WON_BY_STAYING] / times_game * 100.0);
+    printf("Player lost by staying: %.2f.\n",
+           (double)results[PLAYER_LOST_BY_STAYING] / times_game * 100.0);
     printf("%d successful switches / should've switched. %d unsuccesful "
            "switches. %.2f%% in favor of switch.\n",
-           times_switch_positive, times_switch_negative,
-           (double)(times_switch_positive) / (double)times_game * 100);
+           times_switch_positive, times_switch_negative, switch_ratio);
     return 0;
 }
