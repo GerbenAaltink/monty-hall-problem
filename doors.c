@@ -3,66 +3,61 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define CHOICE_KEEP 0
-#define CHOICE_SWITCH 1
+typedef enum {
+    PLAYER_WON_BY_SWITHCHING = 1,
+    PLAYER_LOST_BY_SWITCHING,
+    PLAYER_WON_BY_STAYING,
+    PLAYER_LOST_BY_STAYING
+} MONTY_HALL_RESULT;
+
+MONTY_HALL_RESULT monty_hall() {
+    int door_with_prize = rand() % 3;
+    int door_choice = rand() % 3;
+
+    int door_showman;
+    while (true) {
+        door_showman = rand() % 3;
+        if (door_showman != door_choice && door_showman != door_with_prize)
+            break;
+    }
+
+    bool do_switch = rand() % 2;
+
+    if (door_choice != door_with_prize && do_switch) {
+        // Switch and got prize because of it
+        return PLAYER_WON_BY_SWITHCHING;
+    } else if (door_choice == door_with_prize && do_switch) {
+        // Switched and lost prize, aww
+        return PLAYER_LOST_BY_SWITCHING;
+    } else if (!do_switch && door_choice == door_with_prize) {
+        // Stayed with prize, congrats
+        return PLAYER_WON_BY_STAYING;
+    } else if (!do_switch && door_choice != door_with_prize) {
+        // Didn't switch and didn't get prize
+        return PLAYER_LOST_BY_STAYING;
+    }
+    return 0;
+}
 
 int main() {
     srand(time(NULL));
-    unsigned int total_keep_wins = 0;
-    unsigned int total_switch_wins = 0;
-    for (int j = 0; j < 100000; j++) {
-        unsigned int choices_made[2] = {0};
-        for (int k = 0; k < 1000; k++) {
-            // Choice by showman
-            unsigned int door_showman_choice = rand() % 3;
-            unsigned int door_prize;
-            // Looking for door to put prize behind randomly
-            while (true) {
-                door_prize = rand() % 3;
-                if (door_prize == door_showman_choice) {
-                    // Invalid choice, try again
-                    continue;
-                }
-                // Found valid door to put prize behind
-                break;
-            }
-            // Your first door choice
-            unsigned int door_first_choice = 0;
-            while (true) {
-                door_first_choice = rand() % 3;
-                if (door_first_choice != door_showman_choice) {
-                    // Made a valid choice, not the showman door
-                    break;
-                }
-            }
-            // Decide if you'll switch
-            bool do_switch = rand() % 2;
-            // You've won if the switch value doesn't equal your choice
-            bool won = do_switch != (door_first_choice == door_prize);
-            choices_made[do_switch] += won;
-        }
-        if (choices_made[CHOICE_SWITCH] == choices_made[CHOICE_KEEP]) {
-            continue;
-        }
-        printf("Win switch: %d, win keep: %d: %s\n",
-               choices_made[CHOICE_SWITCH], choices_made[CHOICE_KEEP],
-               choices_made[CHOICE_SWITCH] > choices_made[CHOICE_KEEP]
-                   ? "switch won"
-                   : "keep won");
-
-        if (choices_made[CHOICE_SWITCH] > choices_made[CHOICE_KEEP]) {
-            total_switch_wins++;
+    int times_game = 100;
+    int times_switch_positive = 0;
+    int times_switch_negative = 0;
+    int results[5] = {0};
+    for (int i = 0; i < times_game; i++) {
+        int result = monty_hall();
+        results[result]++;
+        if (result == PLAYER_WON_BY_SWITHCHING ||
+            result == PLAYER_LOST_BY_STAYING) {
+            times_switch_positive++;
         } else {
-            total_keep_wins++;
+            times_switch_negative++;
         }
     }
-    printf("Switch wins :%d Keep wins: %d\n", total_switch_wins,
-           total_keep_wins);
-    printf("Conclusion: %s by a margin of %d/%d times.\n",
-           total_switch_wins > total_keep_wins ? "switching is best choice"
-                                               : "keeping is best choice",
-           total_switch_wins > total_keep_wins
-               ? total_switch_wins - total_keep_wins
-               : total_keep_wins - total_switch_wins,
-           total_switch_wins + total_keep_wins);
+    printf("%d successful switches / should've switched. %d unsuccesful "
+           "switches. %.2f%% in favor of switch.\n",
+           times_switch_positive, times_switch_negative,
+           (double)(times_switch_positive) / (double)times_game * 100);
+    return 0;
 }
